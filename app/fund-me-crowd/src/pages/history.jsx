@@ -20,24 +20,36 @@ const History = () => {
         }
 
         const program = getProgram(wallet);
-
         const getTxList = async () => {
-            const backerAccountPda = BackerAccountPda(program, publicKey);
-            const list = await getBackerTxList(program, backerAccountPda, connection);
-            const txList = [];
+            try {
+                const backerAccountPda = BackerAccountPda(program, publicKey);
+                const list = await getBackerTxList(program, backerAccountPda, connection);
+                console.log("list = ",list);
+                const txList = [];
+    
+                for (let tx of list.campaignList) {
+                    const campaignData = await getCampaign(program, tx.campaign, connection);
+                    tx.campaignName = campaignData.name;
+                    tx.description = campaignData.description;
+                    tx.campaignStatus = Object.keys(campaignData.status)[0];
+                    console.log(tx.refundStatus);
+                }
+    
+                setBackerTxList(list);
 
-            for (let tx of list.campaignList) {
-                const campaignData = await getCampaign(program, tx.campaign, connection);
-                tx.campaignName = campaignData.name;
-                tx.description = campaignData.description;
-                tx.campaignStatus = Object.keys(campaignData.status)[0];
-                console.log(tx.refundStatus);
             }
-
-            setBackerTxList(list);
+            catch (err) {
+                console.log("Error =  = ",err);
+            }
         };
-
-        getTxList();
+        (async () => {
+            try {
+                await getTxList(); 
+            } catch (err) {
+                console.log("error", err);
+                ToastErrorNotification("Not Donation Found...");
+            }
+        })
     }, [connection, publicKey, wallet]);
 
     const refundHandler = async (campaignAccount) => {
@@ -93,6 +105,28 @@ const History = () => {
             connection.removeAccountChangeListener(subscriptionId);
         };
     };
+
+    const deleteBackerAccount = async () => {
+        const program = getProgram(wallet);
+        const backerAccountPda = BackerAccountPda(program, publicKey);
+
+        const tx = await program.methods.backerAccountClose().accounts({
+            backerAccount: backerAccountPda,
+            owner: publicKey
+        }).transaction();
+
+        tx.feePayer = publicKey;
+
+        try {
+            const sendTx = await sendTransaction(tx,connection);
+        ToastSuccessNotification("Transaction History deleted");
+        }
+        catch(err) {
+            console.log("error while deleting = ", err);
+            ToastErrorNotification("what the fuck");
+        }
+        
+    }
 
     return (
         <Container style={{ padding: "20px" }}>

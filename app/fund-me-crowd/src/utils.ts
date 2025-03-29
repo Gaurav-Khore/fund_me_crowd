@@ -35,6 +35,7 @@ export const getBackerTxList = async (program, backerAccountPda, connection) => 
     );
     console.log(txList);
     return txList;
+    
 }
 
 
@@ -58,8 +59,8 @@ export const onChainErrorMessage = (program, error) => {
 }
 
 export const shortDesc = (desc) => {
-    if (desc.split(" ").length > 4) {
-        return desc.split(" ").slice(0, 4).join(" ").trim() + "..."
+    if (desc.split(/\s+/).length > 4) {
+        return desc.split(/\s+/).slice(0, 4).join(" ").trim() + "..."
     }
     return desc
 }

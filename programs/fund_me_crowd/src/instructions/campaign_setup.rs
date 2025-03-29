@@ -28,12 +28,10 @@ pub fn setup_campaign(ctx: Context<SetupCampaign> ,
     msg!("Campaign Id = {:?}",acct.key());
     //all campaign initialized
     let all_campaign_account = &mut ctx.accounts.all_campaign_account;
-    all_campaign_account.campaign_list.truncate(0);
     all_campaign_account.campaign_list.push(acct.key().clone());
     msg!("Campaign Added to all campaign");
     //user campaign initialized
     let user_campaign = &mut ctx.accounts.user_campaign_account;
-    user_campaign.campaigns.truncate(0);
     user_campaign.campaigns.push(acct.key().clone());
     msg!("Campaign Added to User Camapaign");
     

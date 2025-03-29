@@ -203,11 +203,13 @@ export const MyCampaign = () => {
                         <Form.Group className="mb-3">
                             <Form.Label>Description</Form.Label>
                             <Form.Control
+                                rows={3}
+                                as="textarea"
                                 type="text"
                                 placeholder="Enter Campaign Description"
                                 value={campaignDescription}
                                 onChange={(e) => setCampaignDescription(e.target.value)}
-                                required />
+                                required/>
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label>Image URL</Form.Label>

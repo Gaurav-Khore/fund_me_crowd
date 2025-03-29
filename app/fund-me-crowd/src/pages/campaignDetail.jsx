@@ -38,6 +38,16 @@ export const CampaignDetails = () => {
             const campaign = await getCampaign(program, campKey, connection);
             const date = new Date(campaign.duration.toNumber() * 1000);
             setEndDate(date.toDateString().substring(date.toDateString().indexOf(" ") + 1));
+            const formattedParagraph = campaign.description
+                ? campaign.description.split('\n').map((line, index) => (
+                    <span key={index}>
+                        {line}
+                        {index < campaign.description.split('\n').length - 1 && <br />}
+                    </span>
+                ))
+                : "No description available";
+            console.log("Formatted data", formattedParagraph);
+            campaign.description = formattedParagraph;
             setCampaignData(campaign);
 
             // if (campaign.currentAmount.toNumber() === campaign.goalAmount.toNumber()) {
@@ -52,7 +62,7 @@ export const CampaignDetails = () => {
             setCampaignStatus(
                 campStatus === "completed" ? "Completed" :
                     (campStatus === "successful" ? "Successful" :
-                        (campStatus === "failed" ? "Failed" : 
+                        (campStatus === "failed" ? "Failed" :
                             (campStatus === "active" ? "Active" : "Inactive")
                         )
                     )
@@ -86,7 +96,7 @@ export const CampaignDetails = () => {
                 setCampaignStatus(
                     campStatus === "completed" ? "Completed" :
                         (campStatus === "successful" ? "Successful" :
-                            (campStatus === "failed" ? "Failed" : 
+                            (campStatus === "failed" ? "Failed" :
                                 (campStatus === "active" ? "Active" : "Inactive")
                             )
                         )
@@ -182,7 +192,12 @@ export const CampaignDetails = () => {
                                     <Row>
                                         <Col>
                                             <Card.Title style={{ fontWeight: "bold", fontSize: "1.5rem" }}>{campaignData.name}</Card.Title>
-                                            <Card.Text>{campaignData.description}</Card.Text>
+                                            <Card.Text style={{
+                                                whiteSpace: 'pre-wrap',
+                                                maxHeight: '7.5em',
+                                                overflowY: 'auto',
+                                                lineHeight: '1.5em',
+                                            }}><p>{campaignData.description}</p></Card.Text>
                                             <Card.Text><strong>Goal:</strong> {campaignData.goalAmount.toNumber() / LAMPORTS_PER_SOL} SOL</Card.Text>
                                             <Card.Text><strong>Current Amount:</strong> {campaignData.currentAmount.toNumber() / LAMPORTS_PER_SOL} SOL</Card.Text>
                                             <Card.Text><strong>End Date:</strong> {endDate}</Card.Text>
