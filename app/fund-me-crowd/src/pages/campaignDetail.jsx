@@ -197,7 +197,7 @@ export const CampaignDetails = () => {
                                                 maxHeight: '7.5em',
                                                 overflowY: 'auto',
                                                 lineHeight: '1.5em',
-                                            }}><p>{campaignData.description}</p></Card.Text>
+                                            }}>{campaignData.description}</Card.Text>
                                             <Card.Text><strong>Goal:</strong> {campaignData.goalAmount.toNumber() / LAMPORTS_PER_SOL} SOL</Card.Text>
                                             <Card.Text><strong>Current Amount:</strong> {campaignData.currentAmount.toNumber() / LAMPORTS_PER_SOL} SOL</Card.Text>
                                             <Card.Text><strong>End Date:</strong> {endDate}</Card.Text>

@@ -21,7 +21,6 @@ const History = () => {
 
         const program = getProgram(wallet);
         const getTxList = async () => {
-            try {
                 const backerAccountPda = BackerAccountPda(program, publicKey);
                 const list = await getBackerTxList(program, backerAccountPda, connection);
                 console.log("list = ",list);
@@ -36,20 +35,9 @@ const History = () => {
                 }
     
                 setBackerTxList(list);
-
-            }
-            catch (err) {
-                console.log("Error =  = ",err);
-            }
         };
-        (async () => {
-            try {
-                await getTxList(); 
-            } catch (err) {
-                console.log("error", err);
-                ToastErrorNotification("Not Donation Found...");
-            }
-        })
+                getTxList(); 
+            
     }, [connection, publicKey, wallet]);
 
     const refundHandler = async (campaignAccount) => {
